@@ -1,0 +1,34 @@
+<div class="mt4 col-8 offset-2">
+
+  <div class="card">
+    <div class="card-header">Sent Email to reset Password</div>
+    <div class="card-body">
+      <form [formGroup]="loginform" (ngSubmit)="onSubmit()">
+
+
+        <div class="form-group">
+          <label for="exampleInputEmail1">Email address</label>
+          <input type="email"
+                 name="email"
+                 formControlName="email"
+                 class="form-control"
+                 id="exampleInputEmail1">
+          <div *ngIf="email.invalid && email.touched" class="small alert alert-danger ">
+            <div *ngIf="email.errors.required">Email is required</div>
+            <div *ngIf="email.errors.email">Invalid Email</div>
+          </div>
+        </div>
+
+            <button [disabled]="!loginform.valid" type="submit" class="btn btn-primary ">Submit</button>
+
+      </form>
+
+        </div>
+</div>
+
+
+
+    </div>
+
+
+
