@@ -12,6 +12,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 export class SignupComponent implements OnInit {
 
   loginform: FormGroup;
+  results: any;
 
   constructor(private loginservice: LoginService,
               private Token: TokenService,
@@ -55,6 +56,8 @@ export class SignupComponent implements OnInit {
 
 
   handleResponse(data) {
+    this.results = data;
+    console.log(data);
     this.Token.handle(data.access_token);
     this.router.navigate(['../shopping-cart'], {relativeTo: this.route});
   }

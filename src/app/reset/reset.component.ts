@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {LoginService} from '../services/login.service';
-import {SnotifyModule} from 'ng-snotify';
 
 @Component({
   selector: 'app-reset',
@@ -12,26 +11,26 @@ export class ResetComponent implements OnInit {
 
   loginform: FormGroup;
 
-  constructor(private loginservice: LoginService, private notify: SnotifyModule) { }
+  constructor(private loginservice: LoginService) { }
 
   ngOnInit() {
 
-    this.loginform = new FormGroup({
-      email: new FormControl('', [Validators.required, Validators.email])
-    });
+   // this.loginform = new FormGroup({
+     // email: new FormControl('', [Validators.required, Validators.email])
+   // });
   }
 
-  get email() {
-    return this.loginform.get('email');
-  }
+  // get email() {
+   // return this.loginform.get('email');
+  // }
 
-  onSubmit() {
-  this.loginservice.sendPasswordResetLink(this.loginform.value).subscribe(data => this.handleResponse(data),
-  error => console.log(error));
-  }
+  // onSubmit() {
+  // this.loginservice.sendPasswordResetLink(this.loginform.value).subscribe(data => this.handleResponse(data),
+  // error => console.log(error));
+  // }
 
-  handleResponse(data) {
-    this.loginform.value.email = null;
-  }
+ // handleResponse(data) {
+   // this.loginform.value.email = null;
+  // }
 
 }

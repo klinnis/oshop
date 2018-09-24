@@ -54,11 +54,11 @@ get email() {
   }
 
   handleResponse(data) {
-
-      console.log(data);
+    this.loginservice.changeUsername(data.user);
+    this.loginservice.changeAdmin(data.isAdmin);
     this.Token.handle(data.access_token);
     this.Auth.changeAuthStatus(true);
-    this.router.navigate(['/'], {relativeTo: this.route});
+    this.router.navigate(['../'], {relativeTo: this.route});
   }
 
 

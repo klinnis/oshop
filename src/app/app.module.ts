@@ -1,6 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
 import { AppComponent } from './app.component';
 import { BsNavbarComponent } from './bs-navbar/bs-navbar.component';
 import { HomeComponent } from './home/home.component';
@@ -20,7 +19,14 @@ import { SignupComponent } from './signup/signup.component';
 import {BeforeLoginService} from './services/before-login.service';
 import {AfterLoginService} from './services/after-login.service';
 import { ResetComponent } from './reset/reset.component';
-import { SnotifyModule, SnotifyService, ToastDefaults } from 'ng-snotify';
+import { ProductFormComponent } from './admin/product-form/product-form.component';
+import {CategoryService} from './category.service';
+import {TitleValidators} from './validators/title.validators';
+
+
+
+
+
 
 
 @NgModule({
@@ -38,7 +44,8 @@ import { SnotifyModule, SnotifyService, ToastDefaults } from 'ng-snotify';
     ResetComponent,
     LoginComponent,
     SignupComponent,
-    SnotifyModule
+    ProductFormComponent,
+
 
   ],
   imports: [
@@ -48,22 +55,23 @@ import { SnotifyModule, SnotifyService, ToastDefaults } from 'ng-snotify';
     ReactiveFormsModule,
     HttpClientModule,
     RouterModule.forRoot([
-      {path: '', component: HomeComponent, canActivate: [BeforeLoginService]},
-      {path: 'products', component: ProductsComponent, canActivate: [BeforeLoginService]},
+      {path: '', component: HomeComponent},
       {path: 'shopping-cart', component: ShoppingCartComponent, canActivate: [AfterLoginService] },
-      {path: 'check-out', component: CheckOutComponent},
-      {path: 'order-success', component: OrderSuccessComponent},
+      {path: 'admin/products/new', component: ProductFormComponent, canActivate: [AfterLoginService] },
+      {path: 'admin/products/:id', component: ProductFormComponent, canActivate: [AfterLoginService] },
+      {path: 'products', component: ProductsComponent, canActivate: [BeforeLoginService]}, // an den ginoun ta 2 apopanw tha paei edw
+      {path: 'check-out', component: CheckOutComponent, canActivate: [AfterLoginService]},
+      {path: 'order-success', component: OrderSuccessComponent, canActivate: [AfterLoginService]},
       {path: 'my/orders', component: MyOrdersComponent},
       {path: 'login', component: LoginComponent, canActivate: [BeforeLoginService]},
       {path: 'signup', component: SignupComponent, canActivate: [BeforeLoginService]},
-      {path: 'admin/products', component: AdminProductsComponent},
-      {path: 'admin/orders', component: AdminOrdersComponent},
+      {path: 'admin/products', component: AdminProductsComponent, canActivate: [AfterLoginService]},
+      {path: 'admin/orders', component: AdminOrdersComponent, canActivate: [AfterLoginService]},
       {path: 'reset', component: ResetComponent}
 
     ])
   ],
-  providers: [ { provide: 'SnotifyToastConfig', useValue: ToastDefaults},
-    SnotifyService],
+  providers: [ CategoryService, TitleValidators],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
