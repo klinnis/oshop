@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {CategoryService} from '../../category.service';
+
 
 @Component({
   selector: 'app-admin-products',
@@ -14,8 +15,16 @@ export class AdminProductsComponent implements OnInit {
   }
 
   ngOnInit() {
-     this.categoryservice.getProducts().subscribe(data =>
-    {this.products = data});
+
+    setTimeout(() => {
+
+      this.categoryservice.getProducts().subscribe( data =>
+      this.products = data);
+    }, 500);
+
+
+
+
   }
 
 }

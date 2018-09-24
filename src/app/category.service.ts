@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
+import {BehaviorSubject} from "rxjs/index";
 
 @Injectable({
   providedIn: 'root'
 })
 export class CategoryService {
+
 
   constructor(private http: HttpClient) {
   }
@@ -19,7 +21,7 @@ export class CategoryService {
   }
 
   saveProducts(value: any) {
-    return this.http.patch('http://lara.test/api/store/', value);
+    return this.http.put('http://lara.test/api/store', value);
   }
 
   getProducts() {

@@ -1,7 +1,7 @@
 import {AbstractControl, ValidationErrors} from '@angular/forms';
 import {Injectable} from '@angular/core';
 import {CategoryService} from '../category.service';
-import {Observable} from 'rxjs/Observable';
+
 
 @Injectable()
 export class TitleValidators {
@@ -22,7 +22,7 @@ export class TitleValidators {
     }
 
 
-    shouldBeUnique(control: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> {
+    shouldBeUnique(control: AbstractControl): Promise<ValidationErrors | null>  {
 
         return new Promise((resolve, reject) => {
 

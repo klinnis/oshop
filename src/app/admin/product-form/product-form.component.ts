@@ -1,9 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {CategoryService} from '../../category.service';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {TitleValidators} from '../../validators/title.validators';
 import {LoginService} from '../../services/login.service';
 import {ActivatedRoute, Params, Router} from '@angular/router';
+import {Subscription} from 'rxjs/index';
 
 
 
@@ -15,7 +16,7 @@ import {ActivatedRoute, Params, Router} from '@angular/router';
   templateUrl: './product-form.component.html',
   styleUrls: ['./product-form.component.css']
 })
-export class ProductFormComponent implements OnInit {
+export class ProductFormComponent implements OnInit, OnDestroy {
 
 
   categories: any;
@@ -23,7 +24,8 @@ export class ProductFormComponent implements OnInit {
   basicPath = '';
   editMode = false;
   id: number;
-  data: any;
+  private sub: Subscription;
+
 
 
 
@@ -59,16 +61,19 @@ export class ProductFormComponent implements OnInit {
 
     if (this.editMode) {
 
-      const product = null;
+      let product = null;
 
-     this.categoryservice.getOneProduct(this.id).subscribe(data => {
-        product = data;
-        this.form.patchValue({
-          title: product.title,
-          price: product.price,
-          imageUrl: product.imageUrl,
+       this.categoryservice.getOneProduct(this.id).subscribe( data => {
+          product = data
+          this.form.patchValue({
+            title: product.title,
+            price: product.price,
+            imageUrl: product.imageUrl,
+            categories: product.categories
+          });
         });
-      });
+
+
 
     }
 
@@ -80,11 +85,13 @@ export class ProductFormComponent implements OnInit {
 
 
 
+
   onSubmit() {
-    // this.categoryservice.saveProducts(this.form.value).subscribe(data => {});
     if (this.editMode) {
-      console.log(this.form.value);
       this.categoryservice.updateProduct(this.id, this.form.value).subscribe(data => {});
+      this.router.navigate(['/admin/products']);
+    } else {
+       this.categoryservice.saveProducts(this.form.value).subscribe(data => {});
       this.router.navigate(['/admin/products']);
     }
 
@@ -101,6 +108,10 @@ export class ProductFormComponent implements OnInit {
 
   get price() {
     return this.form.get('price');
+  }
+
+  get category() {
+    return this.form.get('categories');
   }
 
 
