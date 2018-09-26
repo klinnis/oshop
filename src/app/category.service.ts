@@ -20,6 +20,10 @@ export class CategoryService {
     return this.http.get('http://lara.test/api/product-names/' + name);
   }
 
+  allProductNames(name: string) {
+    return this.http.get('http://lara.test/api/allproductnames/' + name);
+  }
+
   saveProducts(value: any) {
     return this.http.put('http://lara.test/api/store', value);
   }
@@ -36,6 +40,9 @@ export class CategoryService {
     return this.http.put('http://lara.test/api/updateproduct/' + index, product);
   }
 
+  deleteProduct(index: number) {
+    return this.http.delete('http://lara.test/api/deleteproduct/' + index);
+  }
 }
 
 

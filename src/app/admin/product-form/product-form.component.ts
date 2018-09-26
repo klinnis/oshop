@@ -1,10 +1,10 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {CategoryService} from '../../category.service';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {TitleValidators} from '../../validators/title.validators';
 import {LoginService} from '../../services/login.service';
 import {ActivatedRoute, Params, Router} from '@angular/router';
-import {Subscription} from 'rxjs/index';
+
 
 
 
@@ -16,7 +16,7 @@ import {Subscription} from 'rxjs/index';
   templateUrl: './product-form.component.html',
   styleUrls: ['./product-form.component.css']
 })
-export class ProductFormComponent implements OnInit, OnDestroy {
+export class ProductFormComponent implements OnInit {
 
 
   categories: any;
@@ -24,7 +24,7 @@ export class ProductFormComponent implements OnInit, OnDestroy {
   basicPath = '';
   editMode = false;
   id: number;
-  private sub: Subscription;
+
 
 
 
@@ -64,7 +64,7 @@ export class ProductFormComponent implements OnInit, OnDestroy {
       let product = null;
 
        this.categoryservice.getOneProduct(this.id).subscribe( data => {
-          product = data
+          product = data,
           this.form.patchValue({
             title: product.title,
             price: product.price,
@@ -94,6 +94,14 @@ export class ProductFormComponent implements OnInit, OnDestroy {
        this.categoryservice.saveProducts(this.form.value).subscribe(data => {});
       this.router.navigate(['/admin/products']);
     }
+
+  }
+
+  onDelete() {
+    if (!confirm('Are you sure you want to delete this Product?')) return;
+
+        this.categoryservice.deleteProduct(this.id).subscribe(data => {});
+        this.router.navigate(['/admin/products']);
 
   }
 

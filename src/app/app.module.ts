@@ -22,6 +22,14 @@ import { ResetComponent } from './reset/reset.component';
 import { ProductFormComponent } from './admin/product-form/product-form.component';
 import {CategoryService} from './category.service';
 import {TitleValidators} from './validators/title.validators';
+import { ProductFilterComponent } from './products/product-filter/product-filter.component';
+import { ProductCardComponent } from './product-card/product-card.component';
+import {ShoppingCartService} from './services/shopping-cart.service';
+
+
+
+
+
 
 
 
@@ -45,6 +53,10 @@ import {TitleValidators} from './validators/title.validators';
     LoginComponent,
     SignupComponent,
     ProductFormComponent,
+    ProductFilterComponent,
+    ProductCardComponent,
+
+
 
 
   ],
@@ -55,7 +67,7 @@ import {TitleValidators} from './validators/title.validators';
     ReactiveFormsModule,
     HttpClientModule,
     RouterModule.forRoot([
-      {path: '', component: HomeComponent},
+      {path: '', component: ProductsComponent},
       {path: 'shopping-cart', component: ShoppingCartComponent, canActivate: [AfterLoginService] },
       {path: 'admin/products/new', component: ProductFormComponent, canActivate: [AfterLoginService] },
       {path: 'admin/products/:id', component: ProductFormComponent, canActivate: [AfterLoginService] },
@@ -69,9 +81,9 @@ import {TitleValidators} from './validators/title.validators';
       {path: 'admin/orders', component: AdminOrdersComponent, canActivate: [AfterLoginService]},
       {path: 'reset', component: ResetComponent}
 
-    ])
+    ]),
   ],
-  providers: [ CategoryService, TitleValidators],
+  providers: [ CategoryService, TitleValidators, ShoppingCartService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

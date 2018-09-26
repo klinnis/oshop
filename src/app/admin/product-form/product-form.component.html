@@ -33,9 +33,7 @@
                         <option *ngFor="let category of categories">{{category?.name}}</option>
                     </select>
                     </div>
-                <div *ngIf="price.touched && price.invalid" class="small alert alert-danger ">
-                    <div *ngIf="category.errors?.categoryCheck">required</div>
-                </div>
+
             </div>
             <div class="form-group">
                 <label for="imageUrl">Image Url</label>
@@ -44,12 +42,21 @@
                     <div *ngIf="image.errors?.required">Image is required</div>
                 </div>
             </div>
-            <button [disabled]="!form.valid" type="submit"  class="btn btn-primary">Save</button>
+
+
+            <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                <div class="btn-group mr-2" role="group" aria-label="First group">
+                    <button [disabled]="!form.valid" type="submit"  class="btn btn-primary">Save</button>
+                </div>
+                <div class="btn-group mr-2" role="group" aria-label="First group">
+                <button  type="button"  (click)="onDelete()" class="btn btn-danger">Delete</button>
+                </div>
+            </div>
         </form>
     </div>
     <div class="col-md-6">
-        <div class="card" style="width: 18rem;">
-            <img  class="card-img-top" [src]="imageUrl?.value">
+        <div *ngIf="title.value" class="card" style="width: 18rem;">
+            <img *ngIf="image.value" class="card-img-top" [src]="imageUrl?.value">
             <div class="card-body">
                 <h5 class="card-title">{{title?.value}}</h5>
                 <p class="card-text">{{price?.value | currency: 'EUR': symbol}}</p>
