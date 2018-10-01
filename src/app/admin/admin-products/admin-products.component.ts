@@ -1,7 +1,6 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {CategoryService} from '../../category.service';
-import {Subscription} from 'rxjs/index';
-import {Product} from '../../models/product';
+
 
 
 
@@ -11,11 +10,10 @@ import {Product} from '../../models/product';
   styleUrls: ['./admin-products.component.css'],
 
 })
-export class AdminProductsComponent implements OnInit, OnDestroy {
+export class AdminProductsComponent implements OnInit {
 
-  products: Product;
+  products: any;
   filteredproducts: any;
-  subscription: Subscription;
 
 
 
@@ -30,7 +28,7 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
 
     setTimeout(() => {
 
-     this.subscription = this.categoryservice.getProducts().subscribe( data =>
+      this.categoryservice.getProducts(-1).subscribe( data =>
       this.filteredproducts = this.products = data);
     }, 500);
   }
@@ -41,8 +39,6 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
   }
 
 
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
-  }
+
 
 }

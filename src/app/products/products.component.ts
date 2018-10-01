@@ -1,9 +1,9 @@
-import {Component} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {CategoryService} from '../category.service';
 import {ActivatedRoute} from '@angular/router';
-import {Product} from '../models/product';
-
-
+import {Subject} from 'rxjs/index';
+import 'rxjs/add/operator/takeUntil';
+import {ShoppingCartService} from '../services/shopping-cart.service';
 
 
 
@@ -14,43 +14,52 @@ import {Product} from '../models/product';
   styleUrls: ['./products.component.css'],
 
 })
-export class ProductsComponent {
+export class ProductsComponent implements OnInit, OnDestroy {
 
-  products: Product[] = [];
-  filteredproducts: Product[] = [];
+  products: any;
+  filteredproducts: any;
   category: any;
+  cart: any;
+
+  private ngUnsubscribe: Subject<any> = new Subject();
 
 
 
 
-  constructor(private service: CategoryService, private route: ActivatedRoute) {
+  constructor(private service: CategoryService,
+              private route: ActivatedRoute, private cartService: ShoppingCartService) {
 
-
-    route.queryParamMap.subscribe(params => {
-      this.category = params.get('category');
-      if (this.category) {
-        service.allProductNames(this.category).subscribe(data => {
-          this.filteredproducts = this.products = data;
-        });
-      } else {
-        service.getProducts().subscribe(data => {
-          this.filteredproducts = this.products = data;
-        });
-      }
-
-
-
-
-
-    });
 
   }
 
 
+ngOnInit() {
+
+  this.route.queryParamMap.takeUntil(this.ngUnsubscribe).subscribe(params => {
+    this.category = params.get('category');
+    const cartId = localStorage.getItem('cartId');
+    if (this.category) {
+     this.service.allProductNames(this.category).takeUntil(this.ngUnsubscribe).subscribe(data => {
+        this.filteredproducts = this.products = data;
+      });
+    } else {
+      if (cartId) {
+        this.service.getProducts(cartId).takeUntil(this.ngUnsubscribe).subscribe(data => {
+          this.filteredproducts = this.products = data;
+        });
+      }
+    }
+
+  });
 
 
+}
 
 
+ngOnDestroy() {
+  this.ngUnsubscribe.next();
+  this.ngUnsubscribe.complete();
+}
 
 
 
