@@ -15,11 +15,15 @@ export class ShoppingCartService {
     data1 = this.dataSource.asObservable();
 
 
+
+
   constructor(private http: HttpClient) { }
 
-    updatedcreateItem(data: any) {
-        this.dataSource.next(data);
-    }
+   // updatedfiltered(data: any) {
+     //   this.dataSource.next(data);
+   // }
+
+
 
 
 
@@ -38,6 +42,10 @@ export class ShoppingCartService {
 
     createItem(product: any, cart: any) {
        return this.http.put('http://lara.test/api/createItem', {pro: product, car: cart});
+}
+
+   removeItem(product: any, cart: any) {
+    return this.http.put('http://lara.test/api/deleteItem', {pro: product, car: cart});
 }
 
 

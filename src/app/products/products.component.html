@@ -6,7 +6,29 @@
     <div class="row">
       <ng-container  *ngFor="let p of filteredproducts; let i = index">
         <div class="col">
-          <app-product-card [product]="p"></app-product-card>
+            <div class="card">
+                <img  class="card-img-top" src="{{p?.imageUrl}}" style="max-height: 200px; width: 100%;">
+                <div class="card-body">
+                    <h5 class="card-title">{{p?.title}}</h5>
+                    <p class="card-text">{{p?.price | currency: 'EUR': symbol }}</p>
+                </div>
+                <div class="card-footer">
+                    <button *ngIf="p?.quantity === 0; else updateQuantity" type="button" (click)="addToCart(p)" class="btn btn-secondary btn-block">Add to Cart</button>
+                    <ng-template #updateQuantity>
+                        <div class="row no-gutters">
+                            <div class="col-2">
+                                <button class="btn btn-secondary btn-block" (click)="removeFromCart(p)">-</button>
+                            </div>
+                            <div class="col text-center">{{p?.quantity}} in Cart</div>
+                            <div class="col-2">
+                                <button class="btn btn-secondary btn-block" (click)="addToCart(p)">+</button>
+                            </div>
+                        </div>
+                    </ng-template>
+
+                </div>
+            </div>
+
         </div>
         <div *ngIf="(i+1) % 2 === 0" class="w-100"></div>
       </ng-container>

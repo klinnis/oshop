@@ -20,8 +20,8 @@ export class CategoryService {
     return this.http.get('http://lara.test/api/product-names/' + name);
   }
 
-  allProductNames(name: any) {
-    return this.http.get('http://lara.test/api/allproductnames/' + name);
+  allProductNames(name: any, cartId: any) {
+    return this.http.put('http://lara.test/api/allproductnames', {nam: name, cart: cartId});
   }
 
   saveProducts(value: any) {

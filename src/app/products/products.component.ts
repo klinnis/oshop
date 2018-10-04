@@ -4,7 +4,8 @@ import {ActivatedRoute} from '@angular/router';
 import {Subject} from 'rxjs/index';
 import 'rxjs/add/operator/takeUntil';
 import {ShoppingCartService} from '../services/shopping-cart.service';
-
+import {Product} from '../models/product';
+import { mergeMap } from 'rxjs/operators';
 
 
 
@@ -16,53 +17,108 @@ import {ShoppingCartService} from '../services/shopping-cart.service';
 })
 export class ProductsComponent implements OnInit, OnDestroy {
 
-  products: any;
-  filteredproducts: any;
-  category: any;
-  cart: any;
-
-  private ngUnsubscribe: Subject<any> = new Subject();
-
-
+    products: any;
+    filteredproducts: any;
+    category: any;
+    res: any;
+    cartId: any;
+    private ngUnsubscribe: Subject<any> = new Subject();
 
 
-  constructor(private service: CategoryService,
-              private route: ActivatedRoute, private cartService: ShoppingCartService) {
 
 
-  }
+    constructor(private service: CategoryService,
+                private route: ActivatedRoute,
+                private cartService: ShoppingCartService) {
 
 
-ngOnInit() {
-
-  this.route.queryParamMap.takeUntil(this.ngUnsubscribe).subscribe(params => {
-    this.category = params.get('category');
-    const cartId = localStorage.getItem('cartId');
-    if (this.category) {
-     this.service.allProductNames(this.category).takeUntil(this.ngUnsubscribe).subscribe(data => {
-        this.filteredproducts = this.products = data;
-      });
-    } else {
-      if (cartId) {
-        this.service.getProducts(cartId).takeUntil(this.ngUnsubscribe).subscribe(data => {
-          this.filteredproducts = this.products = data;
-        });
-      }
     }
 
-  });
 
+    ngOnInit() {
+
+    const final = this.route.queryParamMap.pipe(mergeMap(val => {
+            this.category = val.get('category');
+            this.cartId = localStorage.getItem('cartId');
+            if (this.category) {
+                return this.service.allProductNames(this.category, this.cartId);
+            } else {
+                if (this.cartId === null) {
+                    this.cartId = -1;
+                }
+            }
+            return this.service.getProducts(this.cartId);
+        }));
+
+         final.takeUntil(this.ngUnsubscribe).subscribe(val => {
+             this.filteredproducts = val;
+              });
+    }
+
+
+
+
+    addToCart(products: Product) {
+
+        const cartId = this.cartService.getOrCreateCartId();
+
+
+        if (!cartId) {
+        const imero = new Date().getTime();
+        const final = this.cartService.create(imero).pipe(mergeMap(res => {
+        this.res = res;
+        localStorage.setItem('cartId', this.res.id);
+          if (this.category) {
+        this.cartService.createItem(products.id, this.res.id).takeUntil(this.ngUnsubscribe).subscribe(res1 => {});
+          return this.service.allProductNames(this.category, this.res.id);
+             } else {
+             this.cartService.createItem(products.id, this.res.id).takeUntil(this.ngUnsubscribe).subscribe(res2 => {});
+                  return this.service.getProducts(this.res.id);
+                    }
+            }));
+
+        final.takeUntil(this.ngUnsubscribe).subscribe(val => {
+            this.filteredproducts = val;
+            });
+
+        } else {
+            this.cartId = localStorage.getItem('cartId');
+            const final = this.cartService.createItem(products.id, this.cartId).pipe(mergeMap(res => {
+                if (this.category) {
+                    return this.service.allProductNames(this.category, this.cartId);
+                } else {
+                    return this.service.getProducts(this.cartId);
+                }
+            }));
+            final.takeUntil(this.ngUnsubscribe).subscribe(val => {
+                this.filteredproducts = val;
+
+              });
+        }
+    }
+
+    removeFromCart(product: Product) {
+    const final = this.cartService.removeItem(product.id, this.cartId).pipe(mergeMap(res => {
+        if (this.category) {
+            return this.service.allProductNames(this.category, this.cartId);
+        } else {
+            return this.service.getProducts(this.cartId);
+        }
+    }));
+    final.takeUntil(this.ngUnsubscribe).subscribe(val => {this.filteredproducts = val;
+         });
+    }
+
+
+    ngOnDestroy() {
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
+    }
 
 }
 
 
-ngOnDestroy() {
-  this.ngUnsubscribe.next();
-  this.ngUnsubscribe.complete();
-}
 
 
 
 
-
-}

@@ -21,7 +21,6 @@ export class ProductCardComponent implements OnInit, OnDestroy {
 
 
   private ngUnsubscribe: Subject<any> = new Subject();
-  private productId: Subject<any> = new Subject();
   res: any;
   categoryid: any;
   cartId: any;
@@ -37,9 +36,7 @@ export class ProductCardComponent implements OnInit, OnDestroy {
       this.products = this.product;
   }
 
-  changeProductId(id: any) {
-    this.productId.next(id);
-  }
+
 
   addToCart(products: Product) {
 
