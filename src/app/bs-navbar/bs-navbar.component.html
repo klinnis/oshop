@@ -10,7 +10,7 @@
       <li class="nav-item">
         <a *ngIf="loggedIn" class="nav-link" routerLink="/shopping-cart">
           Shopping-Cart
-          <span  class="badge badge-warning"></span>
+          <span *ngIf="itemsNumber" class="badge badge-warning badge-pill">{{itemsNumber}}</span>
         </a>
       </li>
       <li class="nav-item">

@@ -14,6 +14,9 @@ export class ShoppingCartService {
     private dataSource = new Subject<any>();
     data1 = this.dataSource.asObservable();
 
+    private itemsNumber = new Subject();
+    items = this.itemsNumber.asObservable();
+
 
 
 
@@ -23,7 +26,9 @@ export class ShoppingCartService {
      //   this.dataSource.next(data);
    // }
 
-
+    updatedItems(data: any) {
+        this.itemsNumber.next(data);
+    }
 
 
 
@@ -46,6 +51,10 @@ export class ShoppingCartService {
 
    removeItem(product: any, cart: any) {
     return this.http.put('http://lara.test/api/deleteItem', {pro: product, car: cart});
+}
+
+numberOfItems(cart: any) {
+    return this.http.get('http://lara.test/api/all_items/' + cart);
 }
 
 

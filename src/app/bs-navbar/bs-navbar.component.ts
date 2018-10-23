@@ -1,9 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AuthService} from '../services/auth.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {TokenService} from '../services/token.service';
 import {LoginService} from '../services/login.service';
 import {ShoppingCartService} from '../services/shopping-cart.service';
+import {Subject} from "rxjs/index";
 
 @Component({
   selector: 'bs-navbar',
@@ -12,13 +13,15 @@ import {ShoppingCartService} from '../services/shopping-cart.service';
 })
 
 
-export class BsNavbarComponent implements OnInit {
+export class BsNavbarComponent implements OnInit, OnDestroy {
 
 public loggedIn: boolean;
 public username: string;
 public admin: any;
-results: any;
 cnt: any;
+cartId: any;
+private ngUnsubscribe: Subject<any> = new Subject();
+itemsNumber: any;
 
   constructor(private Auth: AuthService,
               private router: Router,
@@ -28,10 +31,12 @@ cnt: any;
               private cartService: ShoppingCartService) { }
 
   ngOnInit() {
-    this.cnt = 0;
     this.Auth.authStatus.subscribe(value => this.loggedIn = value);
     this.loginservice.navbarUsername1.subscribe(value => this.username = value);
     this.loginservice.admin1.subscribe(value => this.admin = value);
+    this.cartId = localStorage.getItem('cartId');
+    this.cartService.items.subscribe(res => {this.itemsNumber = res; });
+
 
 
   }
@@ -41,5 +46,10 @@ cnt: any;
     this.Token.remove();
     this.router.navigate(['/'], {relativeTo: this.route});
   }
+
+    ngOnDestroy() {
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
+    }
 
 }

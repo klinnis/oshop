@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import {ShoppingCartService} from '../services/shopping-cart.service';
+import 'rxjs-compat/add/operator/debounceTime';
 
 @Component({
   selector: 'app-shopping-cart',
@@ -7,9 +9,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ShoppingCartComponent implements OnInit {
 
-  constructor() { }
+ items: any;
+
+  constructor(private cartService: ShoppingCartService) { }
 
   ngOnInit() {
+    this.cartService.items.subscribe(res => {this.items = res; console.log(this.items)});
   }
 
 }
